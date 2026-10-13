@@ -54,7 +54,7 @@ def run(test, params, env):
         """
         query_version_cmd = params["query_version_cmd"]
         output = session.cmd_output(query_version_cmd)
-        version_str = output.strip().split("=")[1]
+        version_str = output.strip().splitlines()[-1].strip()
         version = version_str.split(".")[-1][0:3]
         return int(version)
 
