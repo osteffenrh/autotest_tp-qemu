@@ -1,3 +1,5 @@
+import re
+
 from virttest import error_context, utils_net, utils_test
 from virttest.utils_windows import virtio_win
 
@@ -54,7 +56,10 @@ def run(test, params, env):
         """
         query_version_cmd = params["query_version_cmd"]
         output = session.cmd_output(query_version_cmd)
-        version_str = output.strip().splitlines()[-1].strip()
+        match = re.search(r"(\d+\.){2,}\d+", output)
+        if not match:
+            raise ValueError("Could not parse driver version from: %s" % output)
+        version_str = match.group()
         version = version_str.split(".")[-1][0:3]
         return int(version)
 
