@@ -128,9 +128,9 @@ def run(test, params, env):
             msg = "Unable to get the cdrom's size in guest."
             msg += " Command: %s\nOutput: %s" % (check_cdrom_size_cmd, output)
             test.error(msg)
-        size = output.strip().splitlines()[-1]
+        lines = output.strip().splitlines()
         try:
-            cdrom_size = int(size)
+            cdrom_size = int(lines[-1]) if lines else 0
         except ValueError:
             cdrom_size = 0
         test.log.info("Cdrom's size in guest %s", cdrom_size)
