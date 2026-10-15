@@ -92,7 +92,10 @@ def get_version(
     if driver_format != "ide":
         result = session.cmd_output(guest_ver_cmd, timeout)
         if type == "windows":
-            guest_ver = re.findall(r".*?(\d{2}\.\d{2}\.\d{3}\.\d{4}).*?", result)
+            guest_ver = re.findall(r"(\d+(?:\.\d+){2,})", result)
+            if not guest_ver:
+                LOG_JOB.warning("Could not parse driver version from: %s", result)
+                guest_ver = [result.strip() or "unknown"]
             result_file.write(
                 "### guest-kernel-ver :Microsoft Windows [Version %s]\n" % guest_ver[0]
             )
